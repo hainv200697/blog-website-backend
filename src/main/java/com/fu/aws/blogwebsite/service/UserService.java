@@ -35,7 +35,7 @@ public class UserService {
 
 
     public User createUser(User user) {
-        Optional<User> duplicateUser = userRepository.findByName(user.getName());
+        Optional<User> duplicateUser = userRepository.findByEmail(user.getEmail());
         if (duplicateUser.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "This account exist!");
@@ -47,10 +47,10 @@ public class UserService {
         }
     }
 
-    public User getUserByUserName(String name) {
-        Optional<User> existUser = userRepository.findByName(name);
+    public User getUserByEmail(String email) {
+        Optional<User> existUser = userRepository.findByEmail(email);
         if (existUser.isPresent()) {
-            return userRepository.findByName(name).get();
+            return userRepository.findByEmail(email).get();
         }
         return null;
     }

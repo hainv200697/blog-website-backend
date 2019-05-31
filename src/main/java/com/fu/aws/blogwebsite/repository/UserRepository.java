@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
-    @Query(value = "SELECT u FROM User u WHERE LOWER(u.name) LIKE CONCAT('%',LOWER(:name),'%')")
-    List<User> findAllByNameLike(@Param("name") String name);
+    @Query(value = "SELECT u FROM User u WHERE LOWER(u.email) LIKE CONCAT('%',LOWER(:email),'%')")
+    List<User> findAllByNameLike(@Param("email") String email);
 
-    Optional<User> findByName(String name);
+    Optional<User> findByEmail(String email);
 
-    static Specification<User> filterByName(String name) {
+    static Specification<User> filterByName(String email) {
         return (root, cq, cb) -> {
-            return cb.like(root.get("name"), "%" + name + "%");
+            return cb.like(root.get("email"), "%" + email + "%");
         };
     }
 }
