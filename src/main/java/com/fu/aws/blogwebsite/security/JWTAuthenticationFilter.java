@@ -42,7 +42,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            creds.getName(),
+                            creds.getEmail(),
                             creds.getPassword(),
                             new ArrayList<>())
             );
@@ -64,7 +64,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         res.addHeader("Access-Control-Expose-Headers", "Access-Token, Uid");
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("username", ((UserDetails) auth.getPrincipal()).getUsername());
+        jsonObject.put("email", ((UserDetails) auth.getPrincipal()).getUsername());
         jsonObject.put("token", TOKEN_PREFIX + token);
 //        String jsonObject = "{\"user\":{\"token\":\"" + TOKEN_PREFIX + token + "\"}}";
         res.getWriter().write(jsonObject.toString());

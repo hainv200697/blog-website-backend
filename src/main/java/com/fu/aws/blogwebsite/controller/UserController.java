@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<User> getMe(Principal principal) {
         if (principal != null) {
             String name = principal.getName();
-            User user = userService.getUserByUserName(name);
+            User user = userService.getUserByEmail(name);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
