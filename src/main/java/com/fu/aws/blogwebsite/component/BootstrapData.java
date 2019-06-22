@@ -18,7 +18,7 @@ public class BootstrapData implements CommandLineRunner {
         if (user == null) {
             user = new User();
             user.setEmail("admin@blogwebsite.com");
-            user.setPassword("123");
+            user.setPassword("123456");
             userService.createUser(user);
         }
     }

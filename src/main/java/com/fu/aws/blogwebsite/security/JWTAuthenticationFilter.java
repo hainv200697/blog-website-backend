@@ -65,9 +65,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.addHeader("Access-Control-Expose-Headers", "Access-Token, Uid");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("token", TOKEN_PREFIX + token);
-        JSONObject resJsonObject = new JSONObject();
-        resJsonObject.put("data", jsonObject);
-        res.getWriter().write(resJsonObject.toString());
+        res.getWriter().write(jsonObject.toString());
     }
 }
 
