@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Table(name = "users")
 @NoArgsConstructor
 @Data
-public class User implements Serializable {
+public class Admin implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -1,7 +1,7 @@
 package com.fu.aws.blogwebsite.component;
 
-import com.fu.aws.blogwebsite.entity.User;
-import com.fu.aws.blogwebsite.service.UserService;
+import com.fu.aws.blogwebsite.entity.Admin;
+import com.fu.aws.blogwebsite.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 public class BootstrapData implements CommandLineRunner {
 
     @Autowired
-    private UserService userService;
+    private AdminService adminService;
 
     @Override
     public void run(String... args) {
-        User user = userService.getUserByEmail("admin@blogwebsite.com");
-        if (user == null) {
-            user = new User();
-            user.setEmail("admin@blogwebsite.com");
-            user.setPassword("123456");
-            userService.createUser(user);
+        Admin admin = adminService.getUserByEmail("AdminRequest@blogwebsite.com");
+        if (admin == null) {
+            admin = new Admin();
+            admin.setEmail("AdminRequest@blogwebsite.com");
+            admin.setPassword("123456");
+            adminService.createUser(admin);
         }
     }
 }

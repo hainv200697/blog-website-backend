@@ -2,7 +2,7 @@ package com.fu.aws.blogwebsite.config;
 
 import com.fu.aws.blogwebsite.security.JWTAuthenticationFilter;
 import com.fu.aws.blogwebsite.security.JWTAuthorizationFilter;
-import com.fu.aws.blogwebsite.service.UserDetailsServiceImpl;
+import com.fu.aws.blogwebsite.service.AdminDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,10 +20,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final AdminDetailsServiceImpl userDetailsService;
 
 
-    public WebSecurity(UserDetailsServiceImpl userDetailsService) {
+    public WebSecurity(AdminDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

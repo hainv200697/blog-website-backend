@@ -1,7 +1,7 @@
 package com.fu.aws.blogwebsite.security;
 
 import com.auth0.jwt.JWT;
-import com.fu.aws.blogwebsite.entity.User;
+import com.fu.aws.blogwebsite.entity.Admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,8 +37,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
-            User creds = new ObjectMapper()
-                    .readValue(req.getInputStream(), User.class);
+            Admin creds = new ObjectMapper()
+                    .readValue(req.getInputStream(), Admin.class);
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
