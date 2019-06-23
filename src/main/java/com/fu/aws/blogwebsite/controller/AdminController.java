@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -51,5 +52,14 @@ public class AdminController {
         Admin result = adminService.changePass(editAdmin);
         result.setPassword(null);
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/admin")
+    public List<Admin> getAll() {
+        List<Admin> result = adminService.getAllAdmin();
+        for (Admin admin: result) {
+            admin.setPassword(null);
+        }
+        return result;
     }
 }

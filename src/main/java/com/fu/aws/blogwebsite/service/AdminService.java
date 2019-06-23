@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -70,5 +71,9 @@ public class AdminService {
             return adminRepository.findByEmail(email).get();
         }
         return null;
+    }
+
+    public List<Admin> getAllAdmin() {
+        return adminRepository.findAll();
     }
 }
