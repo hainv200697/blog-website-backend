@@ -3,6 +3,7 @@ package com.fu.aws.blogwebsite.config;
 import com.fu.aws.blogwebsite.security.JWTAuthenticationFilter;
 import com.fu.aws.blogwebsite.security.JWTAuthorizationFilter;
 import com.fu.aws.blogwebsite.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,12 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsServiceImpl userDetailsService;
-
-
-    public WebSecurity(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Override
     @Bean
@@ -33,9 +30,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -44,21 +43,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         authenticationFilter.setFilterProcessesUrl("/auth/admin/login");
 
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/**").permitAll()
-//                .antMatchers(HttpMethod.PUT, "/**").permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                .antMatchers("/", "/static/**", "/**.{js,json,css}").permitAll()
                 .anyRequest().authenticated()
-//                .anyRequest().permitAll()
                 .and()
                 .addFilter(authenticationFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-
-        ;
-
     }
 
     @Bean

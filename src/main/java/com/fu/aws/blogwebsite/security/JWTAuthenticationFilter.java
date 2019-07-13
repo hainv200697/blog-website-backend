@@ -1,8 +1,8 @@
 package com.fu.aws.blogwebsite.security;
 
 import com.auth0.jwt.JWT;
-import com.fu.aws.blogwebsite.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fu.aws.blogwebsite.entity.User;
 import org.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,4 +68,3 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.getWriter().write(jsonObject.toString());
     }
 }
-
