@@ -29,7 +29,7 @@ public class AdminController {
     public ResponseEntity<Admin> getMe(Principal principal) {
         if (principal != null) {
             String name = principal.getName();
-            Admin admin = adminService.getUserByEmail(name);
+            Admin admin = adminService.getAdminByEmail(name);
             if (admin == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -41,7 +41,7 @@ public class AdminController {
 
     @PostMapping("/admin/sign-up")
     public ResponseEntity<Admin> signUp(@RequestBody Admin newAdmin) {
-        Admin result = adminService.createUser(newAdmin);
+        Admin result = adminService.createAdmin(newAdmin);
         result.setPassword(null);
         return ResponseEntity.ok().body(result);
     }
@@ -57,7 +57,7 @@ public class AdminController {
     @GetMapping("/admin")
     public List<Admin> getAll() {
         List<Admin> result = adminService.getAllAdmin();
-        for (Admin admin: result) {
+        for (Admin admin : result) {
             admin.setPassword(null);
         }
         return result;

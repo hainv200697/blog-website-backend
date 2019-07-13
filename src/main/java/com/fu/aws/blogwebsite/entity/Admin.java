@@ -6,8 +6,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -15,14 +19,16 @@ import java.sql.Timestamp;
 @Data
 public class Admin implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "email")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    @Column(nullable = false, unique = true)
+    @NotEmpty
+    @Email(message = "{errors.invalid_email}")
     private String email;
-    @Column(name = "password")
+    @Column(nullable = false)
+    @NotEmpty
+    @Size(min = 6)
     private String password;
-    @Column(name = "role")
-    private String role;
     @Column(name = "active")
     private boolean active;
     @CreationTimestamp
@@ -31,4 +37,15 @@ public class Admin implements Serializable {
     @UpdateTimestamp
     @Column(name = "updated_date")
     private Timestamp updatedDate;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
+
+    public Admin(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
