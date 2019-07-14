@@ -1,6 +1,6 @@
 package com.fu.aws.blogwebsite.component;
 
-import com.fu.aws.blogwebsite.entity.Admin;
+import com.fu.aws.blogwebsite.entity.User;
 import com.fu.aws.blogwebsite.service.AdminService;
 import com.fu.aws.blogwebsite.entity.Role;
 import com.fu.aws.blogwebsite.service.RoleService;
@@ -22,17 +22,21 @@ public class BootstrapData implements CommandLineRunner {
         // Default Role
 
         if (!roleService.isExistRole("ROLE_ADMIN")) {
-            Role roleAdmin = new Role("ROLE_ADMIN");
+            Role roleAdmin = new Role();
+            roleAdmin.setName("ROLE_ADMIN");
             roleService.createRole(roleAdmin);
         }
         if (!roleService.isExistRole("ROLE_USER")) {
-            Role roleAdmin = new Role("ROLE_USER");
-            roleService.createRole(roleAdmin);
+            Role roleUser = new Role();
+            roleUser.setName("ROLE_USER");
+            roleService.createRole(roleUser);
         }
-        // Default Admin Admin
+        // Default User User
         if (!adminService.isExistAdmin("admin@blogwebsite.com")) {
-            Admin admin = new Admin("admin@blogwebsite.com", "123456");
-            adminService.createAdmin(admin);
+            User user = new User();
+            user.setEmail("admin@blogwebsite.com");
+            user.setPassword("123456");
+            adminService.createAdmin(user);
         }
     }
 }

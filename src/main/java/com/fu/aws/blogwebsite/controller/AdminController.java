@@ -1,8 +1,9 @@
 package com.fu.aws.blogwebsite.controller;
 
-import com.fu.aws.blogwebsite.entity.Admin;
+import com.fu.aws.blogwebsite.entity.User;
 import com.fu.aws.blogwebsite.model.AdminRequest;
 import com.fu.aws.blogwebsite.service.AdminService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,47 +19,47 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-//    @Autowired
-//    private AdminRepository userRepository;
-//
-//    @Autowired
-//    private BCryptPasswordEncoder encoder;
-
-    //Get current user
     @RequestMapping(value = "/admin/me", method = RequestMethod.GET)
-    public ResponseEntity<Admin> getMe(Principal principal) {
+    public ResponseEntity<User> getMe(Principal principal) {
         if (principal != null) {
             String name = principal.getName();
-            Admin admin = adminService.getAdminByEmail(name);
-            if (admin == null) {
+            User user = adminService.getAdminByEmail(name);
+            if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            return ResponseEntity.status(HttpStatus.OK).body(admin);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
 
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/admin/sign-up")
-    public ResponseEntity<Admin> signUp(@RequestBody Admin newAdmin) {
-        Admin result = adminService.createAdmin(newAdmin);
+    public ResponseEntity<String> signUp(@RequestBody User newUser) {
+        boolean isExist = adminService.isExistAdmin(newUser.getEmail());
+        if (isExist) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Message", "Email is exist!");
+            return ResponseEntity.badRequest().body(jsonObject.toString());
+        }
+        User result = adminService.createAdmin(newUser);
         result.setPassword(null);
-        return ResponseEntity.ok().body(result);
+        JSONObject jsonObject = new JSONObject(result);
+        return ResponseEntity.ok().body(jsonObject.toString());
     }
 
     @PutMapping("/admin/change-pass")
     @CrossOrigin
-    public ResponseEntity<Admin> changePass(@RequestBody AdminRequest editAdmin) {
-        Admin result = adminService.changePass(editAdmin);
+    public ResponseEntity<User> changePass(@RequestBody AdminRequest editAdmin) {
+        User result = adminService.changePass(editAdmin);
         result.setPassword(null);
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/admin")
-    public List<Admin> getAll() {
-        List<Admin> result = adminService.getAllAdmin();
-        for (Admin admin : result) {
-            admin.setPassword(null);
+    public List<User> getAll() {
+        List<User> result = adminService.getAllAdmin();
+        for (User user : result) {
+            user.setPassword(null);
         }
         return result;
     }

@@ -11,19 +11,20 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
 @Data
-public class Admin implements Serializable {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column(nullable = false, unique = true)
     @NotEmpty
-    @Email(message = "{errors.invalid_email}")
+    @Email
     private String email;
     @Column(nullable = false)
     @NotEmpty
@@ -37,15 +38,8 @@ public class Admin implements Serializable {
     @UpdateTimestamp
     @Column(name = "updated_date")
     private Timestamp updatedDate;
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;
 
-    public Admin(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles = new ArrayList<>();
 }

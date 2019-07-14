@@ -5,24 +5,19 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "roles")
 @NoArgsConstructor
 @Data
-public class Role {
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column(nullable = false, unique = true)
     @NotEmpty
     private String name;
-
-    @ManyToMany(mappedBy = "roles")
-    private List<Admin> admins;
-
-    public Role(String name) {
-        this.name = name;
-    }
 }
