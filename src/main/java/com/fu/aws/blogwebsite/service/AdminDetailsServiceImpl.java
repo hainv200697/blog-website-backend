@@ -1,17 +1,19 @@
 package com.fu.aws.blogwebsite.service;
 
-import com.fu.aws.blogwebsite.entity.Admin;
+import com.fu.aws.blogwebsite.entity.User;
 import com.fu.aws.blogwebsite.repository.AdminRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 
 @Service
+@Transactional
 public class AdminDetailsServiceImpl implements UserDetailsService {
     private final AdminRepository adminRepository;
 
@@ -21,15 +23,15 @@ public class AdminDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Admin> optionalUser = adminRepository.findByEmail(email);
-        Admin admin = null;
+        Optional<User> optionalUser = adminRepository.findByEmail(email);
+        User user = null;
         if (optionalUser.isPresent()) {
-            admin = optionalUser.get();
+            user = optionalUser.get();
         }
 
-        if (admin == null) {
+        if (user == null) {
             throw new UsernameNotFoundException(email);
         }
-        return new org.springframework.security.core.userdetails.User(admin.getEmail(), admin.getPassword(), emptyList());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), emptyList());
     }
 }
