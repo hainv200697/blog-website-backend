@@ -8,44 +8,30 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "external_user")
 @NoArgsConstructor
 @Data
-public class User implements Serializable {
+public class ExternalUser implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String fullName;
     @Column(nullable = false, unique = true)
     @NotEmpty
     @Email
     private String email;
-    @Column(nullable = false)
-    @NotEmpty
-    @Size(min = 6)
-    private String password;
-    private boolean enabled;
+    @Column(name = "active")
+    private boolean active;
     @CreationTimestamp
     @Column(name = "created_date")
     private Timestamp createdDate;
     @UpdateTimestamp
     @Column(name = "updated_date")
     private Timestamp updatedDate;
-
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles = new ArrayList<>();
+    @Column(name = "fullName")
+    private String fullName;
 }

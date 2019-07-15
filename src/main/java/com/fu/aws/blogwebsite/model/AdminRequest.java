@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class AdminRequest {
     private String email;
+    private String fullName;
     private String password;
     private String newPassword;
 }

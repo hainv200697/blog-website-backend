@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -19,6 +20,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/admin/me", method = RequestMethod.GET)
     public ResponseEntity<User> getMe(Principal principal) {
         if (principal != null) {
@@ -33,6 +35,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/admin/sign-up")
     public ResponseEntity<String> signUp(@RequestBody User newUser) {
         boolean isExist = adminService.isExistAdmin(newUser.getEmail());
@@ -42,11 +45,12 @@ public class AdminController {
             return ResponseEntity.badRequest().body(jsonObject.toString());
         }
         User result = adminService.createAdmin(newUser);
-        result.setPassword(null);
-        JSONObject jsonObject = new JSONObject(result);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Message", "Email " + result.getEmail() + "is created");
         return ResponseEntity.ok().body(jsonObject.toString());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/admin/change-pass")
     @CrossOrigin
     public ResponseEntity<User> changePass(@RequestBody AdminRequest editAdmin) {
@@ -55,6 +59,7 @@ public class AdminController {
         return ResponseEntity.ok().body(result);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/admin")
     public List<User> getAll() {
         List<User> result = adminService.getAllAdmin();

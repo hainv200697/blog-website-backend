@@ -2,7 +2,7 @@ package com.fu.aws.blogwebsite.config;
 
 import com.fu.aws.blogwebsite.security.JWTAuthenticationFilter;
 import com.fu.aws.blogwebsite.security.JWTAuthorizationFilter;
-import com.fu.aws.blogwebsite.service.AdminDetailsServiceImpl;
+import com.fu.aws.blogwebsite.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
-    private final AdminDetailsServiceImpl adminDetailsService;
+    private final MyUserDetailsService adminDetailsService;
 
-    public WebSecurity(AdminDetailsServiceImpl adminDetailsService) {
+    public WebSecurity(MyUserDetailsService adminDetailsService) {
         this.adminDetailsService = adminDetailsService;
     }
 
@@ -49,7 +49,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .addFilter(authenticationFilter)
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))

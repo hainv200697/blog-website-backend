@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,27 +45,24 @@ public class AdminService {
 
 
     public User createAdmin(User user) {
-        List<Role> roles = new ArrayList<>();
-        roles.add(roleRepository.findByName("ROLE_ADMIN").get());
-        roles.add(roleRepository.findByName("ROLE_USER").get());
-        user.setRoles(roles);
-        user.setActive(true);
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
+        user.setEnabled(true);
         user.setPassword(encoder.encode(user.getPassword()));
         return adminRepository.save(user);
     }
 
     public boolean isExistAdmin(String email) {
-        Optional<User> checkAdmin = adminRepository.findByEmail(email);
-        if (checkAdmin.isPresent()) {
+        User checkAdmin = adminRepository.findByEmail(email);
+        if (checkAdmin != null) {
             return true;
         }
         return false;
     }
 
     public User getAdminByEmail(String email) {
-        Optional<User> existAdmin = adminRepository.findByEmail(email);
-        if (existAdmin.isPresent()) {
-            return adminRepository.findByEmail(email).get();
+        User existAdmin = adminRepository.findByEmail(email);
+        if (existAdmin != null) {
+            return adminRepository.findByEmail(email);
         } else {
             System.out.println("Not Found");
         }
@@ -72,16 +70,16 @@ public class AdminService {
     }
 
     public User changePass(AdminRequest editAdmin) {
-        Optional<User> find = adminRepository.findByEmail(editAdmin.getEmail());
-        if (!find.isPresent()) {
+        User find = adminRepository.findByEmail(editAdmin.getEmail());
+        if (find != null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Cant found account!");
         } else {
-            if (!encoder.matches(editAdmin.getPassword(), find.get().getPassword())) {
+            if (!encoder.matches(editAdmin.getPassword(), find.getPassword())) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "Password is wrong!");
             }
-            User tmp = find.get();
+            User tmp = find;
             tmp.setPassword(encoder.encode(editAdmin.getNewPassword()));
             return adminRepository.save(tmp);
         }
