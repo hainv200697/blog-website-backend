@@ -30,7 +30,7 @@ public class Swagger2Config {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
-               .securitySchemes(Arrays.asList(apiKey()))
+                .securitySchemes(Arrays.asList(apiKey()))
                 .securityContexts(Collections.singletonList(securityContext()));
     }
 
@@ -49,7 +49,7 @@ public class Swagger2Config {
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo("Your REST API", "Your REST API for web app", "1.0", "Terms of service",
+        ApiInfo apiInfo = new ApiInfo("BLOG WEBSITE REST API", "REST API for Blog", "1.0", "",
                 null, "", "");
         return apiInfo;
     }
