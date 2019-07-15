@@ -10,11 +10,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface AdminRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
+public interface AdminRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     @Query(value = "SELECT u FROM User u WHERE LOWER(u.email) LIKE CONCAT('%',LOWER(:email),'%')")
-    List<User> findAllByNameLike(@Param("email") String email);
+    List<User> findAllByEmailLike(@Param("email") String email);
 
-    Optional<User> findByEmail(String email);
+    User findByEmail(String email);
 
     static Specification<User> filterByName(String email) {
         return (root, cq, cb) -> {

@@ -7,15 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-
 @Service
 public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
     public Role createRole(Role role) {
-       if (isExistRole(role.getName())) {
+        if (isExistRole(role.getName())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "This Role exist!");
         } else {
@@ -24,8 +22,8 @@ public class RoleService {
     }
 
     public boolean isExistRole(String name) {
-        Optional<Role> checkRole = roleRepository.findByName(name);
-        if (checkRole.isPresent()) {
+        Role checkRole = roleRepository.findByName(name);
+        if (checkRole != null) {
             return true;
         }
         return false;

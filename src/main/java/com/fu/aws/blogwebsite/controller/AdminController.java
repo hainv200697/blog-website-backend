@@ -42,8 +42,8 @@ public class AdminController {
             return ResponseEntity.badRequest().body(jsonObject.toString());
         }
         User result = adminService.createAdmin(newUser);
-        result.setPassword(null);
-        JSONObject jsonObject = new JSONObject(result);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Message", "Email " + result.getEmail() + "is created");
         return ResponseEntity.ok().body(jsonObject.toString());
     }
 
