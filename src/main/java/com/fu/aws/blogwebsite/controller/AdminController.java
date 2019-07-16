@@ -55,17 +55,12 @@ public class AdminController {
     @CrossOrigin
     public ResponseEntity<User> changePass(@RequestBody AdminRequest editAdmin) {
         User result = adminService.changePass(editAdmin);
-        result.setPassword(null);
         return ResponseEntity.ok().body(result);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/admin")
     public List<User> getAll() {
-        List<User> result = adminService.getAllAdmin();
-        for (User user : result) {
-            user.setPassword(null);
-        }
-        return result;
+        return adminService.getAllAdmin();
     }
 }

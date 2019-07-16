@@ -1,5 +1,6 @@
 package com.fu.aws.blogwebsite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,6 +32,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     @NotEmpty
     @Size(min = 6)
+    @JsonIgnore
     private String password;
     private boolean enabled;
     @CreationTimestamp

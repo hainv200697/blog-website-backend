@@ -25,7 +25,7 @@ public class ExternalUser implements Serializable {
     @Email
     private String email;
     @Column(name = "active")
-    private boolean active;
+    private boolean active = true;
     @CreationTimestamp
     @Column(name = "created_date")
     private Timestamp createdDate;
