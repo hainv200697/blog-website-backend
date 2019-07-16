@@ -42,14 +42,14 @@ public class BootstrapData implements
         createRoleIfNotFound("ROLE_ADMIN");
         createRoleIfNotFound("ROLE_USER");
 
-        if (!adminService.isExistAdmin("hainvse62544@fpt.edu.vn")) {
+        if (!adminService.isExistAdmin("admin@blogwebsite.com")) {
             Role adminRole = roleRepository.findByName("ROLE_ADMIN");
             List listRole = new ArrayList();
             listRole.add(adminRole);
             User user = new User();
             user.setFullName("Hai Nguyen Van");
             user.setPassword(passwordEncoder.encode("123456"));
-            user.setEmail("hainvse62544@fpt.edu.vn");
+            user.setEmail("admin@blogwebsite.com");
             user.setRoles(listRole);
             user.setEnabled(true);
             adminRepository.save(user);

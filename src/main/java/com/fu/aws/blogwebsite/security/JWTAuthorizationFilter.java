@@ -54,7 +54,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 JWTVerifier verifier = JWT.require(alg).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
                 String username = decodedJWT.getClaim("username").asString();
-                System.out.println("username" + username);
                 String[] privileges = decodedJWT.getClaim("roles").asArray(String.class);
                 List<GrantedAuthority> authorities = getGrantedAuthorities(privileges);
                 if (username != null) {
