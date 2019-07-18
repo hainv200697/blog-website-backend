@@ -53,6 +53,11 @@ public class PostController {
         return postService.getTop3();
     }
 
+    @GetMapping("/{id}")
+    public Post getById(@PathVariable Long id) {
+        return postService.getById(id);
+    }
+
     @GetMapping("admin/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Post> getAll(@RequestParam(value = "page", required = false) Integer page,

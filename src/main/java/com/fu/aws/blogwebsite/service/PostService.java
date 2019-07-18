@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 public class PostService {
-    private final String UPLOADED_FOLDER = "temp/";
+    private final String UPLOADED_FOLDER = "temp";
 
     @Autowired
     private PostRepository postRepository;
@@ -39,7 +39,10 @@ public class PostService {
 
         Path path = Paths.get(UPLOADED_FOLDER + name);
         Files.write(path, bytes);
-        return upload(path);
+        String url = upload(path);
+        File fileTmp = new File(path.toString());
+        fileTmp.delete();
+        return url;
     }
 
     private String getFileName() {
@@ -87,5 +90,9 @@ public class PostService {
             return null;
         }
         return changeStatus(id, "DELETE");
+    }
+
+    public Post getById(Long id) {
+        return postRepository.findById(id).get();
     }
 }
