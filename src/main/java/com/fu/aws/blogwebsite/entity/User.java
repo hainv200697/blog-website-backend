@@ -32,7 +32,7 @@ public class User implements Serializable {
     @NotEmpty
     @Size(min = 6)
     private String password;
-    private boolean enabled;
+    private boolean enabled = true;
     @CreationTimestamp
     @Column(name = "created_date")
     private Timestamp createdDate;
@@ -48,4 +48,7 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
 }

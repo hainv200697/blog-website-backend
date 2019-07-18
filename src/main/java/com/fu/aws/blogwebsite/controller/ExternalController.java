@@ -49,22 +49,9 @@ public class ExternalController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/ban", method = RequestMethod.PUT)
-    ResponseEntity banAccount(@RequestParam String email) {
+    ResponseEntity banAccount(@RequestParam String email, @RequestParam boolean status) {
         JSONObject jsonObject = new JSONObject();
-        ExternalUser save = externalService.editActive(email, false);
-        if (save == null) {
-            jsonObject.put("message", "Email is not found");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
-        }
-        jsonObject = new JSONObject(save);
-        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/removeban", method = RequestMethod.PUT)
-    ResponseEntity removeBanAccount(@RequestParam String email) {
-        ExternalUser save = externalService.editActive(email, true);
-        JSONObject jsonObject = new JSONObject();
+        ExternalUser save = externalService.editActive(email, status);
         if (save == null) {
             jsonObject.put("message", "Email is not found");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
