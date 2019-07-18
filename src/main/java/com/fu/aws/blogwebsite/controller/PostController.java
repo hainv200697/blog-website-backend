@@ -36,33 +36,37 @@ public class PostController {
                 jObj.put("status", 400);
                 return new ResponseEntity<>(jObj.toString(), HttpStatus.BAD_REQUEST);
             }
-            MultipartFile file = model.getImage();
-            if (file == null || file.isEmpty()) {
-                jObj.put("message", "File is empty!");
-                jObj.put("status", 400);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
-            }
-
-            //Check file is video
-            if (!file.getContentType().contains("image/")) {
-                jObj.put("message", "File is not image!");
-                jObj.put("status", 400);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
-            }
-            String link = postService.saveUploadedFile(file);
             Post newPost = new Post();
+            if (model.getType().compareTo("SLOGAN") != 0) {
+                MultipartFile file = model.getImage();
+                if (file == null || file.isEmpty()) {
+                    jObj.put("message", "File is empty!");
+                    jObj.put("status", 400);
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
+                }
+
+                //Check file is video
+                if (!file.getContentType().contains("image/")) {
+                    jObj.put("message", "File is not image!");
+                    jObj.put("status", 400);
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
+                }
+                String link = postService.saveUploadedFile(file);
+                newPost.setImage(link);
+            }
             newPost.setType(model.getType());
             newPost.setTitle(model.getTitle());
             newPost.setContent(model.getContent());
             newPost.setSource(model.getSource());
-            newPost.setImage(link);
             newPost.setStatus("PENDING");
             newPost.setUser(user);
             postService.savePost(newPost);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("Successfully uploaded!", HttpStatus.OK);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", "Post is success");
+        return new ResponseEntity(jsonObject.toString(), HttpStatus.OK);
     }
 
     @GetMapping("/top3")
