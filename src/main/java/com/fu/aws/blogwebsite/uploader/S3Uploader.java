@@ -29,9 +29,8 @@ public class S3Uploader implements Uploader {
     }
 
     @Override
-    public String upload(String path, File file) {
-        path = path + "/" + file.getName();
-        s3.putObject(new PutObjectRequest(bucket, path, file).withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3.getUrl(bucket, path).toString();
+    public String upload(String fileName, File file) {
+        s3.putObject(new PutObjectRequest(bucket, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+        return s3.getUrl(bucket, fileName).toString();
     }
 }

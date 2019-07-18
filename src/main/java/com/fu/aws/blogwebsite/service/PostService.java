@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 public class PostService {
-    private final String UPLOADED_FOLDER = "temp";
+    private final String UPLOADED_FOLDER = "temp/";
 
     @Autowired
     private PostRepository postRepository;
@@ -39,7 +39,7 @@ public class PostService {
 
         Path path = Paths.get(UPLOADED_FOLDER + name);
         Files.write(path, bytes);
-        String url = upload(path);
+        String url = upload(name, new File(UPLOADED_FOLDER + name));
         File fileTmp = new File(path.toString());
         fileTmp.delete();
         return url;
@@ -51,9 +51,9 @@ public class PostService {
         return "IMAGE_" + timeStamp + "_" + random + "_.";
     }
 
-    private String upload(Path path) {
+    private String upload(String fileName, File file) {
         Uploader uploader = new S3Uploader("AKIATSKZRGCKKA5LEAJW", "RHsqHxy/qf6/mpi59Wc700VwrhBlpZqTUW1NAYA0", "blogwebsite-image");
-        return uploader.upload(UPLOADED_FOLDER, new File(path.toString()));
+        return uploader.upload(fileName, file);
     }
 
     public Post savePost(Post newPost) {

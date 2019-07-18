@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,10 +30,26 @@ public class PostController {
     public ResponseEntity<?> multiUploadFileModel(@ModelAttribute FormWrapper model) {
         try {
             ExternalUser user = externalService.findByEmail(model.getEmail());
+            JSONObject jObj = new JSONObject();
             if (user == null) {
-                return new ResponseEntity<>("Email is not exist", HttpStatus.BAD_REQUEST);
+                jObj.put("message", "Email is not exist");
+                jObj.put("status", 400);
+                return new ResponseEntity<>(jObj.toString(), HttpStatus.BAD_REQUEST);
             }
-            String link = postService.saveUploadedFile(model.getImage());
+            MultipartFile file = model.getImage();
+            if (file == null || file.isEmpty()) {
+                jObj.put("message", "File is empty!");
+                jObj.put("status", 400);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
+            }
+
+            //Check file is video
+            if (!file.getContentType().contains("image/")) {
+                jObj.put("message", "File is not image!");
+                jObj.put("status", 400);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
+            }
+            String link = postService.saveUploadedFile(file);
             Post newPost = new Post();
             newPost.setType(model.getType());
             newPost.setTitle(model.getTitle());
