@@ -30,7 +30,7 @@ public class PostController {
         try {
             ExternalUser user = externalService.findByEmail(model.getEmail());
             if (user == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Email is not exist", HttpStatus.BAD_REQUEST);
             }
             String link = postService.saveUploadedFile(model.getImage());
             Post newPost = new Post();
