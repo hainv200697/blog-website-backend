@@ -70,9 +70,12 @@ public class PostService {
         return postRepository.getAllAndPaging(pageable);
     }
 
-    public List<Post> getAllApprove(Integer size, Integer page) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        return postRepository.findPost(pageable);
+    public List<Post> getAllByStatus(Integer size, Integer page, String status) {
+        Pageable pageable = PageRequest.of(page, size,Sort.by("createdDate").descending());
+        if (status == null) {
+            return postRepository.findPost(pageable);
+        }
+        return postRepository.findPost(status, pageable);
     }
 
     public Post changeStatus(Long id, String status) {

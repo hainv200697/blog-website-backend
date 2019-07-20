@@ -9,8 +9,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
-    @Query(value = "SELECT e FROM Post e WHERE e.status = 'APPROVE'")
+    @Query(value = "SELECT e FROM Post e")
     List<Post> findPost(Pageable pageable);
+
+    @Query(value = "SELECT e FROM Post e WHERE e.status = :status")
+    List<Post> findPost(@Param("status") String status, Pageable pageable);
 
     @Query(value = "SELECT e FROM Post e")
     List<Post> getAllAndPaging(Pageable pageable);
