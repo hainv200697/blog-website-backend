@@ -79,7 +79,7 @@ public class PostController {
         return postService.getById(id);
     }
 
-    @GetMapping("admin/all")
+    @GetMapping("/admin/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Post> getAll(@RequestParam(value = "page", required = false) Integer page,
                              @RequestParam(value = "size", required = false) Integer size) {
@@ -104,7 +104,7 @@ public class PostController {
         return postService.getAllApprove(size, page);
     }
 
-    @PutMapping("admin/status/{id}")
+    @GetMapping("/admin/status/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> changeStatus(@RequestParam String status, @PathVariable Long id) {
         Post post = postService.changeStatus(id, status);
@@ -117,7 +117,7 @@ public class PostController {
         return new ResponseEntity(jsonObject.toString(), HttpStatus.OK);
     }
 
-    @PutMapping("delete/{id}")
+    @PutMapping("/delete/{id}")
     public ResponseEntity<String> deletePost(@PathVariable Long id, @RequestParam String email) {
         Post post = postService.changeStatusDelete(id, email);
         JSONObject jsonObject = new JSONObject();
@@ -127,5 +127,18 @@ public class PostController {
         }
         jsonObject.put("message", "Delete success");
         return new ResponseEntity(jsonObject.toString(), HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    public List<Post> getAllByMe(@RequestParam String email,
+                                 @RequestParam(value = "page", required = false) Integer page,
+                                 @RequestParam(value = "size", required = false) Integer size) {
+        if (size == null) {
+            size = 10;
+        }
+        if (page == null) {
+            page = 0;
+        }
+        return postService.getAllByMe(email, page, size);
     }
 }

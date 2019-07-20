@@ -95,4 +95,9 @@ public class PostService {
     public Post getById(Long id) {
         return postRepository.findById(id).get();
     }
+
+    public List<Post> getAllByMe(String email, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        return postRepository.findPostByEmail(email, pageable);
+    }
 }
