@@ -62,7 +62,7 @@ public class PostService {
 
     public List<Post> getTop3() {
         Pageable pageable = PageRequest.of(0, 3, Sort.by("createdDate").descending());
-        return postRepository.findPost(pageable);
+        return postRepository.findPost("APPROVE", pageable);
     }
 
     public List<Post> getAll(Integer size, Integer page) {
