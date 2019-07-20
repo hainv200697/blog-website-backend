@@ -48,7 +48,7 @@ public class ExternalController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/ban", method = RequestMethod.PUT)
+    @RequestMapping(value = "/ban", method = RequestMethod.GET)
     ResponseEntity banAccount(@RequestParam String email, @RequestParam boolean status) {
         JSONObject jsonObject = new JSONObject();
         ExternalUser save = externalService.editActive(email, status);
