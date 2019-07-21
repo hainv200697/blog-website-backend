@@ -105,8 +105,10 @@ public class PostController {
         if (size == null) {
             size = 10;
         }
-        if (page == null) {
+        if (page == null || page < 1) {
             page = 0;
+        } else {
+            page--;
         }
         if (status == null) {
             status = "";
