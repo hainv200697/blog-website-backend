@@ -29,7 +29,7 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public String saveUploadedFile(MultipartFile file) throws IOException {
+    public String saveUploadedFile(MultipartFile file, String bucket) throws IOException {
         byte[] bytes = file.getBytes();
         String name = getFileName() + FilenameUtils.getExtension(file.getOriginalFilename());
 
@@ -40,7 +40,7 @@ public class PostService {
 
         Path path = Paths.get(UPLOADED_FOLDER + name);
         Files.write(path, bytes);
-        String url = upload(name, new File(UPLOADED_FOLDER + name));
+        String url = upload(name, new File(UPLOADED_FOLDER + name), bucket);
         File fileTmp = new File(path.toString());
         fileTmp.delete();
         return url;
@@ -52,8 +52,8 @@ public class PostService {
         return "IMAGE_" + timeStamp + "_" + random + "_.";
     }
 
-    private String upload(String fileName, File file) {
-        Uploader uploader = new S3Uploader("AKIATSKZRGCKKA5LEAJW", "RHsqHxy/qf6/mpi59Wc700VwrhBlpZqTUW1NAYA0", "blogwebsite-image");
+    private String upload(String fileName, File file, String bucket) {
+        Uploader uploader = new S3Uploader("AKIATSKZRGCKKA5LEAJW", "RHsqHxy/qf6/mpi59Wc700VwrhBlpZqTUW1NAYA0", bucket);
         return uploader.upload(fileName, file);
     }
 

@@ -53,7 +53,7 @@ public class PostController {
                     jObj.put("status", 400);
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
                 }
-                String link = postService.saveUploadedFile(file);
+                String link = postService.saveUploadedFile(file, "blogwebsite-image");
                 newPost.setImage(link);
             }
             newPost.setType(model.getType());
@@ -193,7 +193,7 @@ public class PostController {
                 jObj.put("status", 400);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
             }
-            link = postService.saveUploadedFile(file);
+            link = postService.saveUploadedFile(file, "foodcourt-images");
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
