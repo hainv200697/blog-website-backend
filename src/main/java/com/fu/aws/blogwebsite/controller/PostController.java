@@ -2,6 +2,7 @@ package com.fu.aws.blogwebsite.controller;
 
 import com.fu.aws.blogwebsite.entity.ExternalUser;
 import com.fu.aws.blogwebsite.entity.Post;
+import com.fu.aws.blogwebsite.model.FormUploadImage;
 import com.fu.aws.blogwebsite.model.FormWrapper;
 import com.fu.aws.blogwebsite.service.ExternalService;
 import com.fu.aws.blogwebsite.service.PostService;
@@ -172,5 +173,33 @@ public class PostController {
             page = 0;
         }
         return postService.getAllByMe(email, page, size);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> multiUploadFileModel(@ModelAttribute FormUploadImage model) {
+        String link;
+        try {
+            JSONObject jObj = new JSONObject();
+            MultipartFile file = model.getImage();
+            if (file == null || file.isEmpty()) {
+                jObj.put("message", "File is empty!");
+                jObj.put("status", 400);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
+            }
+
+            //Check file is video
+            if (!file.getContentType().contains("image/")) {
+                jObj.put("message", "File is not image!");
+                jObj.put("status", 400);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jObj.toString());
+            }
+            link = postService.saveUploadedFile(file);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", "Upload is success");
+        jsonObject.put("link", link);
+        return new ResponseEntity(jsonObject.toString(), HttpStatus.OK);
     }
 }
