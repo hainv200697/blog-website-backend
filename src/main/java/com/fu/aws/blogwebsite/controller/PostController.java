@@ -7,6 +7,7 @@ import com.fu.aws.blogwebsite.service.ExternalService;
 import com.fu.aws.blogwebsite.service.PostService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,7 +72,7 @@ public class PostController {
 
     @GetMapping("/top3")
     public List<Post> getTop3() {
-        return postService.getTop3();
+        return postService.getApprove(0, 3);
     }
 
     @GetMapping("/{id}")
@@ -94,16 +95,32 @@ public class PostController {
 
     @GetMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<Post> getAllByStatus(@RequestParam(value = "page", required = false) Integer page,
+    public Page<Post> getAllByStatus(@RequestParam(value = "page", required = false) Integer page,
                                      @RequestParam(value = "size", required = false) Integer size,
-                                     @RequestParam(value = "status", required = false) String status) {
+                                     @RequestParam(value = "status", required = false) String status,
+                                     @RequestParam(value = "title", required = false) String title,
+                                     @RequestParam(value = "type", required = false) String type,
+                                     @RequestParam(value = "fullName", required = false) String fullName) {
         if (size == null) {
             size = 10;
         }
         if (page == null) {
             page = 0;
         }
-        return postService.getAllByStatus(size, page, status);
+        if (status == null) {
+            status = "";
+        }
+        if (title == null) {
+            title = "";
+        }
+        if (type == null) {
+            type = "";
+        }
+        if (fullName == null) {
+            fullName = "";
+        }
+        Page<Post> result = postService.getAllWithParam(size, page, status, title, type, fullName);
+        return result;
     }
 
     @GetMapping("/approve")
@@ -115,7 +132,7 @@ public class PostController {
         if (page == null) {
             page = 0;
         }
-        return postService.getAllByStatus(size, page, "APPROVE");
+        return postService.getApprove(page, size);
     }
 
 

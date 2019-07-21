@@ -6,6 +6,7 @@ import com.fu.aws.blogwebsite.uploader.S3Uploader;
 import com.fu.aws.blogwebsite.uploader.Uploader;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -60,9 +61,9 @@ public class PostService {
         return postRepository.save(newPost);
     }
 
-    public List<Post> getTop3() {
-        Pageable pageable = PageRequest.of(0, 3, Sort.by("createdDate").descending());
-        return postRepository.findPost("APPROVE", pageable);
+    public List<Post> getApprove(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        return postRepository.findPostApprove("APPROVE", pageable);
     }
 
     public List<Post> getAll(Integer size, Integer page) {
@@ -70,12 +71,9 @@ public class PostService {
         return postRepository.getAllAndPaging(pageable);
     }
 
-    public List<Post> getAllByStatus(Integer size, Integer page, String status) {
-        Pageable pageable = PageRequest.of(page, size,Sort.by("createdDate").descending());
-        if (status == null) {
-            return postRepository.findPost(pageable);
-        }
-        return postRepository.findPost(status, pageable);
+    public Page<Post> getAllWithParam(Integer size, Integer page, String status, String title, String type, String fullName) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        return postRepository.findPost(status, title, type, fullName, pageable);
     }
 
     public Post changeStatus(Long id, String status) {
